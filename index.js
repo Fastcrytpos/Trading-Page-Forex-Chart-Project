@@ -1,44 +1,103 @@
-const baseCurrency = "USD";
-const discoveredPairs = [];
 
-function discoverUsdPairs(baseCurrency) {
-    const testCurrencies = ["EUR", "GBP", "JPY", "CHF", "AUD", "CAD"];
-    const interval = 20000; // Interval between requests in milliseconds (20 seconds)
-    let currentIndex = 0;
 
-    function makeRequest() {
-        if (currentIndex < testCurrencies.length) {
-            const testCurrency = testCurrencies[currentIndex];
-            const url = `https://api.polygon.io/v2/aggs/ticker/C:${baseCurrency}${testCurrency}/range/1/day/2024-04-09/2024-04-09?apiKey=FyHlRpbLAFbXkejVbq__J4Fre2wp3MWx`;
+// function discoverUsdPairs() {
+//     const testCurrencies = ["EUR", "GBP", "JPY", "CHF", "AUD", "CAD"];
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status) {
-                        const currencyPair = `C:USD${testCurrency}`;
-                        const closingPrice = data.results[0].c;
-                        discoveredPairs.push({ "pair": currencyPair, "close": closingPrice });
-                        console.log(discoveredPairs);
-                    }
-                    currentIndex++;
-                    setTimeout(makeRequest, interval); // Schedule next request after interval
-                })
-                .catch(error => console.error(error));
+//     for (const testCurrency of testCurrencies) {
+//         const options = {method: 'GET', headers: {accept: 'application/json'}};
+
+//         fetch(`https://api.fastforex.io/time-series?from=USD&to=${testCurrency}&start=2024-04-01&end=2024-04-11&interval=P1D&api_key=8236f24a7e-4cbd3466a0-sbrnsg`, options)
+//           .then(response => response.json())
+//           .then(response => console.log(response))
+//           .catch(err => console.error(err));
+
+//     }
+// }
+
+// discoverUsdPairs();
+
+// document.getElementById("currency-list")
+// document.createElement("li")
+let myChart=null;
+
+fetch('http://localhost:3000/currencies')
+.then(res=>res.json())
+.then(data=>{
+    //console.log(data);
+    createCurrency(data)})
+
+
+
+    .catch(err=>console.log(err))
+
+function createCurrency(data) {
+    const currencyList = document.getElementById("currency-list");
+        for (const i of data) {
+            const currency = `USD${Object.keys(i.results)}`;
+            //console.log(currency);
+            
+            const pairs = document.createElement("li");
+            pairs.textContent = currency;
+            //console.log(pairs);
+            pairs.addEventListener("click",()=>{handleClick(i.results)});
+            currencyList.appendChild(pairs);
         }
     }
 
-    makeRequest(); // Start making requests
-    return discoverUsdPairs;
+function handleClick(results){
+    //console.log(event.target.textContent);
+    //console.log(results)
+    //console.log(Object.keys(results))
+   
+    let dates=(Object.keys(Object.values(results)[0]))
+    let values=(Object.values(Object.values(results)[0]))
+    console.log(dates)
+    console.log(values)
+
+    if (myChart) {
+        myChart.destroy();
+    }
+    
+    const canvas = document.getElementById("myChart");
+    const ctx = canvas.getContext("2d");
+    updateHistoricalData(dates,values)
+
+    
+    myChart = new Chart(canvas, {
+        type: "line",
+        data: {
+            labels: dates,
+            datasets: [{
+                label: "Currency Value",
+                data: values,
+                fill: false,
+                borderColor: "rgb(75, 192, 192)",
+                tension: 0.1
+            }]
+        },
+    });
+
 }
 
-function displayCurrencyPairs() {
-  const currencyList = document.getElementById("currency-list");
-  
-  for (pair of discoveredPairs){
-      const listItem = document.createElement('li');
-      listItem.textContent = `${pair.pair} - Previous Close: ${pair.close}`;
-      currencyList.appendChild(listItem);
-  };
+function updateHistoricalData(dates, values) {
+    let table = document.getElementById("historicaldata");
+
+   
+    table.innerHTML = '';
+
+    
+    for (let i = 0; i < dates.length && i < values.length; i++) {
+        let newRow = document.createElement("tr");
+
+        let dateCell = document.createElement("td");
+        dateCell.innerText = dates[i];
+        newRow.appendChild(dateCell);
+
+        let valueCell = document.createElement("td");
+        valueCell.innerText = values[i]; 
+        newRow.appendChild(valueCell);
+
+        table.appendChild(newRow); 
+    }
 }
 
-discoverUsdPairs(baseCurrency);

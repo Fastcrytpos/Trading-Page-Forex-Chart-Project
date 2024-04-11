@@ -1,0 +1,32 @@
+/* Add your CSS styles here */
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+.listcontainer {
+  flex: 1;
+  margin-right: 10px; /* Optional: Add margin for spacing */
+}
+.chart-container {
+  flex-grow: 1; /* Let the chart container grow to fill available space */
+  margin: 0 10px; /* Optional: Add margin for spacing */
+}
+.data-container {
+  flex: 1;
+  margin-left: 10px; /* Optional: Add margin for spacing */
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

@@ -4,10 +4,81 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>USD Currency Pairs</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar {
+      width: 250px; 
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+
+    .chart-container {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    .table-container {
+      width: 250px; 
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #dee2e6;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-  <h1>USD Currency Pairs</h1>
-  <ul id="currency-list">CURRENCY:     PRICE:</ul>
+  <div class="sidebar">
+    <h1>USD Currency Pairs</h1>
+    <ul id="currency-list">
+      
+    </ul>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="myChart"></canvas>
+  </div>
+
+  <div class="table-container">
+    <h2>Historical Data</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Daily High</th>
+        </tr>
+      </thead>
+      <tbody id="historicaldata">
+        
+      </tbody>
+    </table>
+  </div>
+
   <script src="index.js"></script>
 </body>
 </html>
